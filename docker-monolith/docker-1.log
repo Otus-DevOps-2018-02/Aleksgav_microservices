@@ -1,0 +1,11 @@
+REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
+aleksandr/ubuntu-tmp-file   latest              dadcb04bac59        8 seconds ago       113MB
+nginx                       latest              ae513a47849c        4 days ago          109MB
+ubuntu                      16.04               0b1edfbffd27        7 days ago          113MB
+hello-world                 latest              e38bc07ac18e        3 weeks ago         1.85kB
+
+
+Отличие контейнера от образа.
+У контейнера есть состояние, настройки сети, хоста ->
+т.е. запущенного инстанса на основе образа.
+Образ это слепок контейнера, а контейнер это запущенный "инстанс" на основе образа.
