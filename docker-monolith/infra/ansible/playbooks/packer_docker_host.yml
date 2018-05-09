@@ -1,0 +1,44 @@
+---
+- name: Prepare docker image
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Add apt dependencies for https transport
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - python-pip
+      tags: docker-reddit-host
+
+    - name: Add apt key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        id: 0EBFCD88
+        state: present
+      tags: docker-reddit-host
+
+    - name: Add docker repository
+      apt_repository:
+        update_cache: yes
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+        state: present
+      tags: docker-reddit-host
+
+    - name: Install docker-ce
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - docker-ce
+      tags: docker-reddit-host
+
+    - name: Install docker-py
+      pip:
+        name: docker-py
+      tags: docker-reddit-host
