@@ -1,0 +1,5 @@
+project = "docker-203423"
+public_key_path = "~/.ssh/appuser.pub"
+private_key_path = "~/.ssh/appuser"
+disk_image = "docker-reddit-app-base"
+instances_quantity = 2
