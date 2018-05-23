@@ -1,8 +1,50 @@
 # Aleksgav_microservices
 Aleksgav microservices repository
 
+## HOMEWORK 15
 
-## HOMEWORK 13
+ - Подключился к ранее созданному хосту
+ - Распаковал микросервисное приложение
+ - Создал докер файлы для:
+  * post
+  * comment
+  * ui
+ - Собрал образа с сервисами
+ - Создал бридж сеть
+ - Запустил контейнеры
+ - Проверил - все ок
+ - Оптимизировал образа
+ - Создал docker volume и подключил его к mongo db
+ - Перезапустил приложение - все посты остались
+
+
+#### Задание со *
+
+Остановил все контейнеры и запустил с другими сетевыми алиасами, проверил - все работает.
+
+```
+docker run -d --network=reddit \
+  --network-alias=post_db_test --network-alias=comment_db_test mongo:latest
+docker run -d --network=reddit \
+  --network-alias=post_test -e "POST_DATABASE_HOST=post_db_test" abirvalg/post:1.0
+docker run -d --network=reddit \
+  --network-alias=comment_test -e "COMMENT_DATABASE_HOST=comment_db_test" abirvalg/comment:1.0
+docker run -d --network=reddit \
+  -p 9292:9292 -e "POST_SERVICE_HOST=post_test" -e "COMMENT_SERVICE_HOST=comment_test" abirvalg/ui:1.0
+```
+
+#### Задание со *
+
+Пересобрал образа на основе alpine linux
+
+#### Задание со **
+
+Еще сильнее уменьшил размеры образов.
+Главным счетом за счет использования чистого alpine linux, и удаления ненужных пакетов после сборки проекта.
+Пример в репозитории.
+
+
+## HOMEWORK 14
  - Создал новый проект в GCE
  - Поднял зост с докером
  - Поковырялся с PID namespace
@@ -21,7 +63,7 @@ Aleksgav microservices repository
  - Создал плейбук для деплоя докер контейнера, с динамическим инвентори, в поднятую инфраструктуру
 
 
-## HOMEWORK 12
+## HOMEWORK 13
  - Установил Docker
  - Запустил контейнер hello world
  - Изучил команды:
