@@ -1,7 +1,7 @@
 # Aleksgav_microservices
 Aleksgav microservices repository
 
-## HOMEWORK 14
+## HOMEWORK 15
 
  - Подключился к ранее созданному хосту
  - Распаковал микросервисное приложение
@@ -24,13 +24,13 @@ Aleksgav microservices repository
 
 ```
 docker run -d --network=reddit \
---network-alias=post_db_test --network-alias=comment_db_test mongo:latest
+  --network-alias=post_db_test --network-alias=comment_db_test mongo:latest
 docker run -d --network=reddit \
---network-alias=post_test -e "POST_DATABASE_HOST=post_db_test" abirvalg/post:1.0
+  --network-alias=post_test -e "POST_DATABASE_HOST=post_db_test" abirvalg/post:1.0
 docker run -d --network=reddit \
---network-alias=comment_test -e "COMMENT_DATABASE_HOST=comment_db_test" abirvalg/comment:1.0
+  --network-alias=comment_test -e "COMMENT_DATABASE_HOST=comment_db_test" abirvalg/comment:1.0
 docker run -d --network=reddit \
--p 9292:9292 -e "POST_SERVICE_HOST=post_test" -e "COMMENT_SERVICE_HOST=comment_test" abirvalg/ui:1.0
+  -p 9292:9292 -e "POST_SERVICE_HOST=post_test" -e "COMMENT_SERVICE_HOST=comment_test" abirvalg/ui:1.0
 ```
 
 #### Задание со *
@@ -44,7 +44,7 @@ docker run -d --network=reddit \
 Пример в репозитории.
 
 
-## HOMEWORK 13
+## HOMEWORK 14
  - Создал новый проект в GCE
  - Поднял зост с докером
  - Поковырялся с PID namespace
@@ -63,7 +63,7 @@ docker run -d --network=reddit \
  - Создал плейбук для деплоя докер контейнера, с динамическим инвентори, в поднятую инфраструктуру
 
 
-## HOMEWORK 12
+## HOMEWORK 13
  - Установил Docker
  - Запустил контейнер hello world
  - Изучил команды:
