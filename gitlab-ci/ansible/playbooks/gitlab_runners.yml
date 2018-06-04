@@ -1,0 +1,31 @@
+---
+- name: Add and register gitlab runners
+  hosts: all
+  gather_facts: false
+  vars:
+    runners_quantity: 4
+    registration_token: XXX
+  tasks:
+    - name: Add runners
+      become: yes
+      docker_container:
+        name: "gitlab-runner-{{ item }}"
+        detach: yes
+        restart_policy: always
+        volumes:
+          - /srv/gitlab-runner/config:/etc/gitlab-runner
+          - /var/run/docker.sock:/var/run/docker.sock
+        image: gitlab/gitlab-runner:latest
+      with_sequence: start=1 end={{ runners_quantity }}
+
+    - name: Register runners
+      become: yes
+      docker_container:
+        name: "gitlab-runner-register-{{ item }}"
+        image: gitlab/gitlab-runner:latest
+        detach: no
+        # auto_remove: yes
+        volumes:
+          - /srv/gitlab-runner/config:/etc/gitlab-runner
+        command: register --non-interactive --executor "docker" --docker-image alpine:latest --url "http://{{ inventory_hostname }}/" --registration-token "{{ registration_token }}" --description "my-runner-{{ item }}" --tag-list "linux,xenial,ubuntu,docker" --run-untagged --locked="false"
+      with_sequence: start=1 end={{ runners_quantity }}

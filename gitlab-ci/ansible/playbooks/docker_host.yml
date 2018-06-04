@@ -1,0 +1,80 @@
+---
+- name: Prepare host for gitlab
+  hosts: all
+  gather_facts: false
+  vars:
+    gtilab_ci_base_path: /srv/gitlab
+  tasks:
+    - name: Add apt dependencies for https transport
+      become: yes
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - python-pip
+      tags: docker-gitlab-host
+
+    - name: Add apt key
+      become: yes
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        id: 0EBFCD88
+        state: present
+      tags: docker-gitlab-host
+
+    - name: Add docker repository
+      become: true
+      apt_repository:
+        update_cache: yes
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+        state: present
+      tags: docker-gitlab-host
+
+    - name: Install docker-ce
+      become: yes
+      become_method: sudo
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - docker-ce
+        - docker-compose
+      tags: docker-gitlab-host
+
+    - name: Start docker on boot
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Install docker-py
+      pip:
+        name: docker-py
+      tags: docker-gitlab-host
+
+    - name: Create directories
+      become: yes
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: appuser
+        group: appuser
+      loop:
+        - "{{ gtilab_ci_base_path }}/config"
+        - "{{ gtilab_ci_base_path }}/data"
+        - "{{ gtilab_ci_base_path }}/logs"
+
+    - name: Create docker compose file
+      template:
+        src: "{{ inventory_dir }}/templates/docker-compose.yml.j2"
+        dest: "{{ gtilab_ci_base_path }}/docker-compose.yml"
+        mode: 0644
+
+    - name: Launch Gitlab-CI
+      become: yes
+      docker_service:
+        project_src: "{{ gtilab_ci_base_path }}"
