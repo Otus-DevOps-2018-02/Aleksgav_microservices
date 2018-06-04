@@ -1,6 +1,48 @@
 # Aleksgav_microservices
 Aleksgav microservices repository
 
+## HOMEWORK 17
+
+ - Написал терраформ шаблон для развертывания окружения и развернул его
+ - Написал энсибл плейбук для установки докера, настройки и установки gitlab и установил его
+ - Зарегистрировался в созданном gitlab
+ - Создал группу проектов
+ - Создал проект
+ - Добавил .gitlab-ci.yml
+ - Запушил репозиторий в созданный гитлаб
+ - Создал, запустил и зарегистрировал раннер
+ - Добавил тестирование приложения reddit в pipeline
+ - Изменил настройки в .gitlab-ci.yml для приложения reddit
+ - Добавил тест приложения reddit
+ - Отправил код в репозиторий и убедился что раннеры отработали
+
+#### Задание со *
+
+Продумайте автоматизацию развертывания и регистрации Gitlab CI Runner.
+
+Для этого нужно перейти в папку gitlab-ci/ansible
+Dыплнить команду:
+```
+ansible-playbook playbooks/gitlab_runners.yml --extra-vars "registration_token=XXXX"
+```
+
+#### Задание со *
+
+Настройте интеграцию вашего Pipeline с тестовым Slack-чатом, который вы использовали ранее.
+
+Оповещения настроены в канал: #aleksandr_gavrishchuk
+
+
+Для запуска проекта нужно выполнить:
+из папки gitlab-ci/terraform/prod
+```
+terraform apply
+```
+из папки gitlab-ci/ansible
+```
+ansible-playbook playbooks/docker_host.yml
+```
+
 
 ## HOMEWORK 16
 
