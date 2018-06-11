@@ -1,5 +1,3 @@
-image: ruby:2.4.2
-
 stages:
   - build
   - test
@@ -7,48 +5,55 @@ stages:
   - stage
   - production
 
-variables:
-  DATABASE_URL: 'mongodb://mongo/user_post'
-
 before_script:
-  - cd reddit
-  - bundle install
+  - echo "Generate Key"
+  - cd infra/terraform/prod
+  - echo $GCE_ACCOUNT > key.json
+  - mkdir -p .ssh
+  - mv terraform.tfvars.example terraform.tfvars
 
 build_job:
+  image: docker:latest
   stage: build
   script:
     - echo 'Building'
+    - echo $CI_PROJECT_DIR
+    - cd $CI_PROJECT_DIR
 
-test_unit_job:
-  stage: test
-  services:
-    - mongo:latest
-  script:
-    - ruby simpletest.rb
-
-test_integration_job:
-  stage: test
-  script:
-    - echo 'Testing 2'
-
-deploy_dev_job:
+branch_review:
+  image: abirvalg/ubuntu-terraform-ansible
   stage: review
   script:
-    - echo 'Deploy'
-  environment:
-    name: dev
-    url: http://dev.example.com
-
-branch review:
-  stage: review
-  script: echo "Deploy to $CI_ENVIRONMENT_SLUG"
+    - echo "Deploy to $CI_ENVIRONMENT_SLUG"
+    - ssh-keygen -t rsa -f .ssh/gitlab_appuser -C gitlab_appuser -P ""
+    - eval $(ssh-agent -s)
+    - ssh-add .ssh/gitlab_appuser
+    - terraform init -backend-config="credentials=key.json"
+    - terraform apply -auto-approve -var-file=terraform.tfvars
+    - echo $(terraform output app_external_ip)
   environment:
     name: branch/$CI_COMMIT_REF_NAME
     url: http://$CI_ENVIRONMENT_SLUG.example.com
+    on_stop: destroy_instance
   only:
     - branches
   except:
     - master
+
+destroy_instance:
+  image: abirvalg/ubuntu-terraform-ansible
+  stage: review
+  script:
+    - echo "Destroying..."
+    - ssh-keygen -t rsa -f .ssh/gitlab_appuser -C gitlab_appuser -P ""
+    - terraform init -backend-config="credentials=key.json"
+    - terraform destroy -auto-approve -var-file=terraform.tfvars
+  when: manual
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    action: stop
+  # dependencies:
+  #   - branch_review
 
 staging:
   stage: stage

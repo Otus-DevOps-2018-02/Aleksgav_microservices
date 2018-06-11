@@ -27,5 +27,5 @@
         # auto_remove: yes
         volumes:
           - /srv/gitlab-runner/config:/etc/gitlab-runner
-        command: register --non-interactive --executor "docker" --docker-image alpine:latest --url "http://{{ inventory_hostname }}/" --registration-token "{{ registration_token }}" --description "my-runner-{{ item }}" --tag-list "linux,xenial,ubuntu,docker" --run-untagged --locked="false"
+        command: register --non-interactive --executor "docker" --docker-image alpine:latest --url "http://{{ inventory_hostname }}/" --registration-token "{{ registration_token }}" --description "my-runner-{{ item }}" --tag-list "linux,xenial,ubuntu,docker" --run-untagged --locked="false" --docker-privileged
       with_sequence: start=1 end={{ runners_quantity }}
