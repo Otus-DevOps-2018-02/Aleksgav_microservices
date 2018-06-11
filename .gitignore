@@ -13,3 +13,5 @@ docker-monolith/infra/packer/variables.json
 ansible/roles/jdauphant.nginx
 ansible/roles/db
 vault.key
+
+.env
