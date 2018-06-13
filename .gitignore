@@ -15,3 +15,5 @@ ansible/roles/db
 vault.key
 
 .env
+
+.idea
