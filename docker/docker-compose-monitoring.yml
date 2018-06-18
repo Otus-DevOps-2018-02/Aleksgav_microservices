@@ -92,6 +92,22 @@ services:
         aliases:
           - alertmanager
 
+  telegraf:
+    image: ${USER_NAME}/telegraf
+    environment:
+      HOST_PROC: /rootfs/proc
+      HOST_SYS: /rootfs/sys
+      HOST_ETC: /rootfs/etc
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/rootfs/sys:ro
+      - /proc:/rootfs/proc:ro
+      - /etc:/rootfs/etc:ro
+    networks:
+      back_net:
+        aliases:
+          - telegraf
+
 volumes:
   prometheus_data:
   grafana_data:

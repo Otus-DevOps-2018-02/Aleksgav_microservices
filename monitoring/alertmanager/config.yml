@@ -1,10 +1,23 @@
 global:
   slack_api_url: 'https://hooks.slack.com/services/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'
 
+  smtp_from: 'alertmanager@example_host'
+  smtp_auth_username: 'user'
+  smtp_auth_password: 'pass'
+  smtp_smarthost: 'example_host:443'
+
 route:
   receiver: 'slack-notifications'
+  routes:
+    - receiver: 'slack-notifications'
+    - receiver: 'email-notifications'
 
 receivers:
 - name: 'slack-notifications'
   slack_configs:
-  - channel: '#aleksandr_gavrishchuk'
+    - channel: '#aleksandr_gavrishchuk'
+
+- name: 'email-notifications'
+  email_configs:
+    - to: 'example@somehost.ru'
+
