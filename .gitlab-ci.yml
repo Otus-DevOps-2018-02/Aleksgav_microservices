@@ -1,35 +1,78 @@
-image: ruby:2.4.2
-
 stages:
   - build
   - test
-  - deploy
-
-variables:
-  DATABASE_URL: 'mongodb://mongo/user_post'
+  - review
+  - stage
+  - production
 
 before_script:
-  - cd reddit
-  - bundle install
+  - echo "Generate Key"
+  - cd infra/terraform/prod
+  - echo $GCE_ACCOUNT > key.json
+  - mkdir -p .ssh
+  - mv terraform.tfvars.example terraform.tfvars
 
 build_job:
+  image: docker:latest
   stage: build
   script:
     - echo 'Building'
+    - echo $CI_PROJECT_DIR
+    - cd $CI_PROJECT_DIR
 
-test_unit_job:
-  stage: test
-  services:
-    - mongo:latest
+branch_review:
+  image: abirvalg/ubuntu-terraform-ansible
+  stage: review
   script:
-    - ruby simpletest.rb
+    - echo "Deploy to $CI_ENVIRONMENT_SLUG"
+    - ssh-keygen -t rsa -f .ssh/gitlab_appuser -C gitlab_appuser -P ""
+    - eval $(ssh-agent -s)
+    - ssh-add .ssh/gitlab_appuser
+    - terraform init -backend-config="credentials=key.json"
+    - terraform apply -auto-approve -var-file=terraform.tfvars
+    - echo $(terraform output app_external_ip)
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    url: http://$CI_ENVIRONMENT_SLUG.example.com
+    on_stop: destroy_instance
+  only:
+    - branches
+  except:
+    - master
 
-test_integration_job:
-  stage: test
+destroy_instance:
+  image: abirvalg/ubuntu-terraform-ansible
+  stage: review
   script:
-    - echo 'Testing 2'
+    - echo "Destroying..."
+    - ssh-keygen -t rsa -f .ssh/gitlab_appuser -C gitlab_appuser -P ""
+    - terraform init -backend-config="credentials=key.json"
+    - terraform destroy -auto-approve -var-file=terraform.tfvars
+  when: manual
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    action: stop
+  # dependencies:
+  #   - branch_review
 
-deploy_job:
-  stage: deploy
+staging:
+  stage: stage
+  when: manual
+  only:
+    - /^\d+\.\d+\.\d+/
   script:
     - echo 'Deploy'
+  environment:
+    name: stage
+    url: https://beta.example.com
+
+production:
+  stage: production
+  when: manual
+  only:
+    - /^\d+\.\d+\.\d+/
+  script:
+    - echo 'Deploy'
+  environment:
+    name: production
+    url: https://example.com
