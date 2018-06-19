@@ -17,6 +17,7 @@ build_monitoring_images:
 	for mon in alertmanager blackbox_exporter grafana mongo_db_exporter prometheus telegraf; \
 	do cd monitoring/$$mon; \
 	docker build -t $$USER_NAME/$$mon . ; \
+	cd -; \
 	done
 
 push_all:

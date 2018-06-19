@@ -54,6 +54,9 @@ services:
       back_net:
         aliases:
           - blackbox-exporter
+      front_net:
+        aliases:
+          - blackbox-exporter
 
   cadvisor:
     image: google/cadvisor:v0.29.0
