@@ -1,6 +1,7 @@
 # Aleksgav_microservices
 Aleksgav microservices repository
 
+
 ## Homework 20
 
   - Разделил фаил docker-compose
@@ -29,6 +30,8 @@ Aleksgav microservices repository
   - Реализовал бизнес метрику приложения - количество постов по времени.
     Планировал сделать по часам - но тк долго ждать теста - сделал по минутам.
      
+=======
+
 
 ## Homework 19
 
