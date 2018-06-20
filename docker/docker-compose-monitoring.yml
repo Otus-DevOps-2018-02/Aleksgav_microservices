@@ -73,7 +73,7 @@ services:
           - cadvisor-exporter
 
   grafana:
-    image: grafana/grafana:5.0.0
+    image: ${USER_NAME}/grafana
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
@@ -83,6 +83,10 @@ services:
       - prometheus
     ports:
       - 3000:3000
+    networks:
+      back_net:
+        aliases:
+          - grafana
 
   alertmanager:
     image: ${USER_NAME}/alertmanager
