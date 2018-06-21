@@ -17,9 +17,12 @@ prometheus = Prometheus::Client.registry
 comment_health_gauge = Prometheus::Client::Gauge.new(:comment_health, 'Health status of Comment service')
 comment_health_db_gauge = Prometheus::Client::Gauge.new(:comment_health_mongo_availability, 'Check if MongoDB is available to Comment')
 comment_count = Prometheus::Client::Counter.new(:comment_count, 'A counter of new comments')
+hours_histogram = Prometheus::Client::Histogram.new(:posting_by_hours, 'Histogram posting time by hours')
+
 prometheus.register(comment_health_gauge)
 prometheus.register(comment_health_db_gauge)
 prometheus.register(comment_count)
+prometheus.register(hours_histogram)
 
 ## Schedule healthcheck function
 if File.exist?('build_info.txt')
@@ -52,7 +55,11 @@ post '/add_comment/?' do
   db = settings.mongo_db
   result = db.insert_one post_id: params['post_id'], name: params['name'], email: params['email'], body: params['body'], created_at: params['created_at']
   db.find(_id: result.inserted_id).to_a.first.to_json
+
   comment_count.increment
+
+  mins = Time.new.hour * 60 + Time.new.min
+  hours_histogram.observe({ service: 'post' }, mins)
 end
 
 get '/healthcheck' do

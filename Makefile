@@ -14,12 +14,13 @@ build_project_images:
 	done
 
 build_monitoring_images:
-	for mon in blackbox_exporter mongo_db_exporter prometheus; \
+	for mon in alertmanager blackbox_exporter grafana mongo_db_exporter prometheus telegraf grafana; \
 	do cd monitoring/$$mon; \
 	docker build -t $$USER_NAME/$$mon . ; \
+	cd -; \
 	done
 
 push_all:
-	for image in ui comment post-py blackbox_exporter mongo_db_exporter prometheus; \
+	for image in ui comment post-py alertmanager blackbox_exporter grafana mongo_db_exporter prometheus telegraf grafana; \
 	do docker push $$USER_NAME/$$image; \
 	done
