@@ -13,19 +13,19 @@ def log_event(type, name, message, params = '{}')
                  "event=#{name} | " \
                  "request_id=#{request.env['REQUEST_ID']} | " \
                  "message=\'#{message}\' | " \
-                 "params: #{params}")
+                 "params: #{params.to_json}")
   when 'info'
     logger.info('service=ui | ' \
                 "event=#{name} | " \
                 "request_id=#{request.env['REQUEST_ID']} | " \
                 "message=\'#{message}\' | " \
-                "params: #{params}")
+                "params: #{params.to_json}")
   when 'warning'
     logger.warn('service=ui | ' \
                 "event=#{name} | " \
                 "request_id=#{request.env['REQUEST_ID']} | " \
                 "message=\'#{message}\' |  " \
-                "params: #{params}")
+                "params: #{params.to_json}")
   end
 end
 
@@ -37,6 +37,9 @@ def http_request(method, url, params = {})
   case method
   when 'get'
     response = settings.http_client.get url
+
+    log_event('info', 'http_request', response.to_s)
+
     JSON.parse(response.body)
   when 'post'
     settings.http_client.post url, params
