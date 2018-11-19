@@ -1,6 +1,17 @@
 # Aleksgav_microservices
 Aleksgav microservices repository
 
+# Homework 24
+
+  - Протестровал работу kube-dns
+  - Протестровал балансер с nodePort
+  - Создал Ingress для сервиса ui
+  - Добавил TLS сертификат, перенастроил Ingress на прием только HTTPS трафика
+  - Создал NetworkPolicy для mongodb
+  - Создал PV хранилище для mongodb
+  - Создал PVC для mongodb и подключил его
+  - Добавил StorageClass в PVC
+
 # Homework 23
 
     Ссылка на приложение http://35.239.6.146:31375/
