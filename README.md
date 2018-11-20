@@ -1,6 +1,24 @@
 # Aleksgav_microservices
 Aleksgav microservices repository
 
+# Homework 26
+
+  - Установил ingress Nginx
+  - Установил Prometheus
+  - Включил kube-state-metrics
+  - Включил node-exporter
+  - Запустил приложение с помощью чарта reddit
+  - Создал отдельные конфигурации для post, comment, ui
+  - Установил grafana с помощью helm
+  - Добавил дэшборды в графану
+  - Создал переменные в графане
+  - Параметризовал дэшборды
+  - Добавил лейбл к самой мощной ноде в кластере
+  - Добавил чарты для EFK
+  - Запустил EFK в k8s
+  - Проверил сбор логов в kibana
+
+
 # Homework 25
 
   - Установил Helm
@@ -16,6 +34,7 @@ Aleksgav microservices repository
   - Добавил фукнцию удаления окружения и протестировал ее
   - Создал staging и production среды для работы приложения
 
+
 # Homework 24
 
   - Протестровал работу kube-dns
@@ -26,6 +45,7 @@ Aleksgav microservices repository
   - Создал PV хранилище для mongodb
   - Создал PVC для mongodb и подключил его
   - Добавил StorageClass в PVC
+
 
 # Homework 23
 
@@ -46,12 +66,14 @@ Aleksgav microservices repository
   - Запустил дэшбоард для кластера
   - Назначил сервсному аккаунту роль с достаточными правами на просмотр информации о кластере
 
+
 # Homework 22
 
   - Описал приложение с помощью манифестов
   - Прошел Kubernetes the hard way
   - Проверил что kubectl apply -f <filename> проходит по созданным деплойментам
   - Удалил кластер
+
 
 # Homework 21
 
