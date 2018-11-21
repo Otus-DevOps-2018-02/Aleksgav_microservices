@@ -2,6 +2,13 @@
 Aleksgav microservices repository
 
 
+# Homework 22
+
+  - Описал приложение с помощью манифестов
+  - Прошел Kubernetes the hard way
+  - Проверил что kubectl apply -f <filename> проходит по созданным деплойментам
+  - Удалил кластер
+
 # Homework 21
 
   - Обновил код микросервисов и пересобрал образы
