@@ -1,0 +1,21 @@
+---
+comment:
+  image:
+    repository: abirvalg/comment
+    tag: latest
+  service:
+    externalPort: 9292
+
+post:
+  image:
+    repository: abirvalg/post
+    tag: latest
+    service:
+      externalPort: 5000
+
+ui:
+  image:
+    repository: abirvalg/ui
+    tag: latest
+    service:
+      externalPort: 9292
